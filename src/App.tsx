@@ -4,7 +4,9 @@ import Navbar from "./components/Navbar";
 export default function App() {
   const [setup, setSetup] = useState(false);
   const [size, setSize] = useState("0");
-  //TODO: ADD BUTTONS TO ADD NEW ROWS AND COLUMNS
+  const [row, setRow] = useState(0);
+  const [col, setCol] = useState(0);
+  //TODO: USE THE HOOKS FOR KEEPING TRACK OF THE ROWS AND COLS
 
   useEffect(()=>{console.log(size);},[size])
 
@@ -14,8 +16,17 @@ export default function App() {
       {
         !setup
             && 
-        <div className="bg-green-300 p-2 flex justify-center">
-            <select defaultValue={0} onChange={e => setSize(e.target.value)} className="text-center text-lg md:text-xl lg:text-2xl font-electrolize text-black block bg-white border border-green-300 hover:border-black shadow leading-tight focus:outline-none focus:shadow-outline rounded-md">
+        <div className="bg-green-300 p-2 flex justify-center gap-2">
+            <div className="flex font-electrolize align-middle">
+              <div className="items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">row</div>
+              <input type="number" id="quantity" name="quantity" defaultValue={0} min="0" max="999" className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md"/>
+            </div>
+            <div className="flex font-electrolize align-middle">
+              <div className="items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">col</div>
+              <input type="number" id="quantity" name="quantity" defaultValue={0} min="0" max="999" className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md"/>
+            </div>
+            <div className="grow"></div>
+            <select defaultValue={0} onChange={e => setSize(e.target.value)} className="text-center text-md md:text-lg lg:text-xl font-electrolize text-black block font-bold uppercase bg-green-100 border-2 border-black hover:border-white shadow leading-tight focus:outline-none focus:shadow-outline rounded-md hover:bg-black hover:text-green-300 focus:bg-black focus:text-green-300">
                 <option value={0}>Size</option>
                 <option value={1}>Small</option>
                 <option value={2}>Medium</option>
