@@ -6,11 +6,21 @@ export default function App() {
   const [color, setColor] = useState("border-green-300");
   const [row, setRow] = useState(0);
   const [col, setCol] = useState(0);
-  const [grid, setGrid] = useState(Array(row).fill(Array(col).fill(0)));
+  const [grid, setGrid] = useState(JSON.parse(JSON.stringify(Array(row).fill(Array(col).fill(0)))));
 
   useEffect(()=>{
-    setGrid(JSON.parse(JSON.stringify(Array(row).fill(Array(col).fill(0)))));
-    // TODO: COPY OLD STATES WHEN THE ROW AND COL CHANGES
+    let r = Math.min(grid.length, row);
+    let c = col;
+    if(grid[0] != undefined){
+      c = Math.min(grid[0].length, col);
+    }
+    let newGrid = JSON.parse(JSON.stringify(Array(row).fill(Array(col).fill(0))));
+    for(let i=0; i<r; i++){
+      for(let j=0; j<c; j++){
+        newGrid[i][j] = grid[i][j]
+      }
+    }
+    setGrid(newGrid);
   },[row,col])
 
   return (
@@ -53,7 +63,7 @@ export default function App() {
       </div>
       <div className="flex-col p-2">
         {
-            grid.map((r,i:any) => (
+            grid.map((r:any,i:any) => (
               <div key={i} className="flex justify-center">
                 {
                   r.map((_:any,j:any) => 
