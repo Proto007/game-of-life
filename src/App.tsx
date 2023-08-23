@@ -1,4 +1,6 @@
 import { useState,useEffect } from "react";
+import {GiPerspectiveDiceSixFacesRandom} from "react-icons/gi"
+import {AiOutlineClear} from "react-icons/ai"
 import Navbar from "./components/Navbar";
 
 export default function App() {
@@ -23,6 +25,15 @@ export default function App() {
     setGrid(newGrid);
   },[row,col])
 
+  function randomizeGrid(){
+    let newGrid = grid.map(() => Array.from({length:col}, () => {return Math.round(Math.random())}));
+    setGrid(newGrid);
+  }
+
+  function clearGrid(){
+    setGrid(JSON.parse(JSON.stringify(Array(row).fill(Array(col).fill(0)))));
+  }
+
   return (
     <div>
       <div className="sticky top-0 z-50">
@@ -41,6 +52,20 @@ export default function App() {
                 <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">col</div>
                 <input type="number" id="quantity" name="quantity" defaultValue={0} min="0" max="50" onChange={e => setCol(+e.target.value)} className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md"/>
               </div>
+              <button onClick={() => randomizeGrid()} className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
+                <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                  <GiPerspectiveDiceSixFacesRandom size={40}/>
+                </span>
+                <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Randomize</span>
+                <span className="relative invisible">Randomize</span>
+              </button>
+              <button onClick={() => clearGrid()} className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
+                <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                  <AiOutlineClear size={40}/>
+                </span>
+                <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Clear</span>
+                <span className="relative invisible">Clear</span>
+              </button>
               <div className="grow"></div>
               <select id="colorSelector" defaultValue="green" onChange={e => setColor(e.target.value)} className="py-2 text-center text-md md:text-lg lg:text-xl font-electrolize text-black block font-bold uppercase bg-green-100 border-2 border-black hover:border-white shadow leading-tight focus:outline-none focus:shadow-outline rounded-md hover:bg-black hover:text-green-300 focus:bg-black focus:text-green-300">
                   <option value="border-green-300">Green</option>
