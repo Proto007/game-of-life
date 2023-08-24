@@ -8,6 +8,8 @@ export default function App() {
   const [color, setColor] = useState("border-green-300");
   const [row, setRow] = useState(0);
   const [col, setCol] = useState(0);
+  const [drag, setDrag] = useState(false);
+  const [dragState, setDragState] = useState(1);
   const [grid, setGrid] = useState(JSON.parse(JSON.stringify(Array(row).fill(Array(col).fill(0)))));
 
   useEffect(()=>{
@@ -86,7 +88,11 @@ export default function App() {
           </div>
       }
       </div>
-      <div className="flex-col p-2">
+      <div 
+        className="flex-col p-2"
+        onMouseUp={() => {setDrag(false);}}
+        onMouseLeave={() => {setDrag(false);}}
+      >
         {
             grid.map((r:any,i:any) => (
               <div key={i} className="flex justify-center">
@@ -94,20 +100,31 @@ export default function App() {
                   r.map((_:any,j:any) => 
                     <div 
                       key={j} 
-                      onClick={
+                      onMouseEnter={
                         () => {
-                          let newGrid=[...grid];
-                          if(grid[i][j]==0){
-                            newGrid[i][j] = 1;
+                          if(drag){
+                            let newGrid=[...grid];
+                            newGrid[i][j] = dragState;
+                            setGrid(newGrid);
                           }
-                          else{
-                            newGrid[i][j] = 0;
-                          }
-                          setGrid(newGrid);
                         }
                       }
+                      onMouseDown={
+                        () => {
+                          if(grid[i][j]==0){
+                            setDragState(1);
+                          }
+                          else{
+                            setDragState(0);
+                          }
+                          let newGrid=[...grid];
+                          newGrid[i][j] = dragState;
+                          setGrid(newGrid);
+                          setDrag(true);
+                        }
+                      }
+                      onMouseUp={() => {setDrag(false);}}
                       className={`aspect-square grow ${color} border-2 ring-1 ring-black ${grid[i][j]>0?"bg-black":"bg-white"}`}
-                      //TODO: MOUSE CLICK DRAG EVENT
                     />
                   )
                 }
