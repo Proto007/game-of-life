@@ -90,8 +90,8 @@ export default function App() {
       </div>
       <div 
         className="flex-col p-2"
-        onMouseUp={() => {setDrag(false);}}
-        onMouseLeave={() => {setDrag(false);}}
+        onMouseUp={() => {if(!setup){setDrag(false);}}}
+        onMouseLeave={() => {if(!setup){setDrag(false);}}}
       >
         {
             grid.map((r:any,i:any) => (
@@ -102,7 +102,7 @@ export default function App() {
                       key={j} 
                       onMouseEnter={
                         () => {
-                          if(drag){
+                          if(!setup && drag){
                             let newGrid=[...grid];
                             newGrid[i][j] = dragState;
                             setGrid(newGrid);
@@ -111,6 +111,9 @@ export default function App() {
                       }
                       onMouseDown={
                         () => {
+                          if(setup){
+                            return;
+                          }
                           if(grid[i][j]==0){
                             setDragState(1);
                           }
@@ -123,7 +126,7 @@ export default function App() {
                           setDrag(true);
                         }
                       }
-                      onMouseUp={() => {setDrag(false);}}
+                      onMouseUp={() => {if(!setup){setDrag(false);}}}
                       className={`aspect-square grow ${color} border-2 ring-1 ring-black ${grid[i][j]>0?"bg-black":"bg-white"}`}
                     />
                   )
