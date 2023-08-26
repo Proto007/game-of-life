@@ -11,6 +11,7 @@ export default function App() {
   const [drag, setDrag] = useState(false);
   const [dragState, setDragState] = useState(1);
   const [grid, setGrid] = useState(JSON.parse(JSON.stringify(Array(row).fill(Array(col).fill(0)))));
+  const [population, setPopulation] = useState(0);
 
   useEffect(()=>{
     let r = Math.min(grid.length, row);
@@ -25,7 +26,19 @@ export default function App() {
       }
     }
     setGrid(newGrid);
-  },[row,col])
+  },[row,col]);
+
+  useEffect(() => {
+    let count = 0;
+    for(let i=0; i<row; i++){
+      for(let j=0; j<col; j++){
+        if(grid[i][j]){
+          count++;
+        }
+      }
+    }
+    setPopulation(count);
+  },[grid]);
 
   function randomizeGrid(){
     let newGrid = grid.map(() => Array.from({length:col}, () => {return Math.round(Math.random())}));
@@ -42,7 +55,12 @@ export default function App() {
       <Navbar/>
       { 
         setup ?
-          <div>GRID IS SET</div>
+          <div className="bg-green-300 p-2 flex-col md:flex-row flex justify-center gap-2 border-b border-black">
+            <div className="flex font-electrolize align-middle w-full md:w-auto">
+              <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">Population</div>
+              <div className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md px-6 py-2 bg-white font-bold">{population}</div>
+            </div>
+          </div>
           // TODO: POST SETUP ACTION BAR
           :
           <div className="bg-green-300 p-2 flex-col md:flex-row flex justify-center gap-2 border-b border-black">
