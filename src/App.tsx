@@ -1,6 +1,7 @@
 import { useState,useEffect } from "react";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi"
 import { AiOutlineClear,AiOutlineArrowRight,AiOutlineArrowLeft } from "react-icons/ai"
+import { BiSkipPrevious,BiSkipNext } from "react-icons/bi"
 import Navbar from "./components/Navbar";
 
 export default function App() {
@@ -63,12 +64,28 @@ export default function App() {
               <span className="absolute flex items-center justify-center w-full h-full text-green-300 transition-all duration-300 transform group-hover:translate-x-full ease">Back</span>
               <span className="relative invisible">Back</span>
             </button>
+            <div className="grow"></div>
+            <div className="grow"></div>
+            <div className="flex justify-center">
+              {/* TODO: MAKE THE BUTTONS FUNCTIONAL */}
+              <button className="hover:opacity-50">
+                <BiSkipPrevious size={45}/>
+              </button>
+              <button className="hover:opacity-50">
+                <BiSkipNext size={45}/>
+              </button>
+            </div>
+            <div className="grow"></div>
+            <div className="flex font-electrolize align-middle w-full md:w-auto">
+              <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">Generation</div>
+              <div className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md px-6 py-2 bg-white font-bold">{0}</div>
+              {/* TODO: GENERATION COUNTER */}
+            </div>
             <div className="flex font-electrolize align-middle w-full md:w-auto">
               <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">Population</div>
               <div className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md px-6 py-2 bg-white font-bold">{population}</div>
             </div>
           </div>
-          // TODO: POST SETUP ACTION BAR
           :
           <div className="bg-green-300 p-2 flex-col md:flex-row flex justify-center gap-2 border-b border-black">
               <div className="flex font-electrolize align-middle w-full md:w-auto">
