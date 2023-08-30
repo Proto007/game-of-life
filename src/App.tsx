@@ -120,7 +120,18 @@ export default function App() {
                   <option value="border-indigo-300">Indigo</option>
                   <option value="border-violet-300">Violet</option>
               </select>
-              <button onClick={() => setSetup(true)} className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-green-300 transition duration-300 ease-out border-2 border-white rounded-md bg-black shadow-md group">
+              <button 
+                onClick={
+                  () => {
+                    if(grid.length==0 || population==0){
+                      alert("Add some cells to a grid to start game.");
+                      return;
+                    }
+                    setSetup(true);
+                  }
+                } 
+                className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-green-300 transition duration-300 ease-out border-2 border-white rounded-md bg-black shadow-md group"
+              >
                 <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
                   <AiOutlineArrowRight size={30}/>
                 </span>
