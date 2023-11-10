@@ -87,39 +87,43 @@ export default function App() {
             </div>
           </div>
           :
-          <div className="bg-green-300 p-2 flex-col md:flex-row flex justify-center gap-2 border-b border-black">
-              <div className="flex font-electrolize align-middle w-full md:w-auto">
-                <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">row</div>
-                <input type="number" id="quantity" name="quantity" defaultValue={0} min="0" max="50" onChange={e => setRow(+e.target.value)} className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md"/>
+          <div className="bg-green-300 p-2 flex-col xl:flex-row flex justify-center gap-2 border-b border-black">
+              <div className="flex flex-col md:flex-row justify-center gap-2">
+                <div className="flex font-electrolize align-middle w-full md:w-auto">
+                  <div className="grow md:grow-0 items-center justify-center px-4 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">row</div>
+                  <input type="number" id="quantity" name="quantity" defaultValue={0} min="0" max="50" onChange={e => setRow(+e.target.value)} className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-md lg:text-lg font-md"/>
+                </div>
+                <div className="flex font-electrolize align-middle w-full md:w-auto">
+                  <div className="grow md:grow-0 items-center justify-center px-4 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">col</div>
+                  <input type="number" id="quantity" name="quantity" defaultValue={0} min="0" max="50" onChange={e => setCol(+e.target.value)} className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-md lg:text-lg font-md"/>
+                </div>
               </div>
-              <div className="flex font-electrolize align-middle w-full md:w-auto">
-                <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">col</div>
-                <input type="number" id="quantity" name="quantity" defaultValue={0} min="0" max="50" onChange={e => setCol(+e.target.value)} className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md"/>
+              <div className="flex justify-center gap-2">
+                <button onClick={() => randomizeGrid()} className="grow relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
+                  <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                    <GiPerspectiveDiceSixFacesRandom size={40}/>
+                  </span>
+                  <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Randomize</span>
+                  <span className="relative invisible">Randomize</span>
+                </button>
+                <button onClick={() => clearGrid()} className="grow relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
+                  <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                    <AiOutlineClear size={40}/>
+                  </span>
+                  <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Clear</span>
+                  <span className="relative invisible">Clear</span>
+                </button> 
+                <select id="colorSelector" defaultValue="green" onChange={e => setColor(e.target.value)} className="grow py-2 text-center text-md md:text-lg lg:text-xl font-electrolize text-black block font-bold uppercase bg-green-100 border-2 border-black hover:border-white shadow leading-tight focus:outline-none focus:shadow-outline rounded-md hover:bg-black hover:text-green-300 focus:bg-black focus:text-green-300">
+                    <option value="border-green-300">Green</option>
+                    <option value="border-red-300">Red</option>
+                    <option value="border-blue-300">Blue</option>
+                    <option value="border-orange-300">Orange</option>
+                    <option value="border-yellow-300">Yellow</option>
+                    <option value="border-indigo-300">Indigo</option>
+                    <option value="border-violet-300">Violet</option>
+                </select>
               </div>
-              <button onClick={() => randomizeGrid()} className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
-                <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
-                  <GiPerspectiveDiceSixFacesRandom size={40}/>
-                </span>
-                <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Randomize</span>
-                <span className="relative invisible">Randomize</span>
-              </button>
-              <button onClick={() => clearGrid()} className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
-                <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
-                  <AiOutlineClear size={40}/>
-                </span>
-                <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Clear</span>
-                <span className="relative invisible">Clear</span>
-              </button>
               <div className="grow"></div>
-              <select id="colorSelector" defaultValue="green" onChange={e => setColor(e.target.value)} className="py-2 text-center text-md md:text-lg lg:text-xl font-electrolize text-black block font-bold uppercase bg-green-100 border-2 border-black hover:border-white shadow leading-tight focus:outline-none focus:shadow-outline rounded-md hover:bg-black hover:text-green-300 focus:bg-black focus:text-green-300">
-                  <option value="border-green-300">Green</option>
-                  <option value="border-red-300">Red</option>
-                  <option value="border-blue-300">Blue</option>
-                  <option value="border-orange-300">Orange</option>
-                  <option value="border-yellow-300">Yellow</option>
-                  <option value="border-indigo-300">Indigo</option>
-                  <option value="border-violet-300">Violet</option>
-              </select>
               <button 
                 onClick={
                   () => {
