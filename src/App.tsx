@@ -15,6 +15,9 @@ export default function App() {
   const [population, setPopulation] = useState(0);
 
   useEffect(()=>{
+    if (setup){
+      return;
+    }
     let r = Math.min(grid.length, row);
     let c = col;
     if(grid[0] != undefined){
@@ -40,7 +43,7 @@ export default function App() {
     }
     setPopulation(count);
   },[grid]);
-
+  
   function randomizeGrid(){
     let newGrid = grid.map(() => Array.from({length:col}, () => {return Math.round(Math.random())}));
     setGrid(newGrid);
@@ -49,6 +52,64 @@ export default function App() {
   function clearGrid(){
     setGrid(JSON.parse(JSON.stringify(Array(row).fill(Array(col).fill(0)))));
   }
+
+  function expandGrid(){
+    let rowAdded = 0;
+    if (grid[row-1].includes(1)){
+      grid.push(Array(col).fill(0));
+      rowAdded += 1;
+    }
+    if(grid[0].includes(1)){
+      grid.unshift(Array(col).fill(0));
+      rowAdded += 1;
+    }
+    setRow(row+rowAdded);
+    const getCol = (arr, n) => arr.map(x => x[n]);
+    let colAdded = 0;
+    if (getCol(grid,row-1).includes(1)){
+      grid.map(function(x){return x.push(0);})
+      colAdded += 1;
+    }
+    if (getCol(grid,0).includes(1)){
+      grid.map(function(x){return x.unshift(0);})
+      colAdded += 1;
+    }
+    setCol(col+colAdded);
+  }
+
+  function trimGrid(){
+    let rowDiff = 0;
+    let gridCopy = grid;
+    if (!grid[row-1].includes(1)){
+      gridCopy = gridCopy.slice(0,-1);
+      rowDiff += 1;
+    }
+    if(!grid[0].includes(1)){
+      gridCopy = gridCopy.slice(1);
+      rowDiff += 1;
+    }
+    setRow(row-rowDiff);
+    const getCol = (arr, n) => arr.map(x => x[n]);
+    let colDiff = 0;
+    if (!getCol(gridCopy,0).includes(1)){ 
+      gridCopy = gridCopy.map(function(x){return x.slice(0,-1);})
+      colDiff += 1;
+    }
+    if (!getCol(gridCopy,row-1).includes(1)){
+      gridCopy = gridCopy.map(function(x){return x.slice(1)});
+      colDiff += 1;
+    }
+    setCol(col-colDiff);
+    setGrid(gridCopy);
+  }
+
+  useEffect(() => {
+    if (setup == true){
+      //expandGrid();
+      //trimGrid();
+    }
+  },[setup]);
+
 
   return (
     <div>
@@ -91,11 +152,11 @@ export default function App() {
               <div className="flex flex-col md:flex-row justify-center gap-2">
                 <div className="flex font-electrolize align-middle w-full md:w-auto">
                   <div className="grow md:grow-0 items-center justify-center px-4 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">row</div>
-                  <input type="number" id="quantity" name="quantity" defaultValue={0} min="0" max="50" onChange={e => setRow(+e.target.value)} className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-md lg:text-lg font-md"/>
+                  <input type="number" id="quantity" name="quantity" defaultValue={row} min="0" max="50" onChange={e => setRow(+e.target.value)} className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-md lg:text-lg font-md"/>
                 </div>
                 <div className="flex font-electrolize align-middle w-full md:w-auto">
                   <div className="grow md:grow-0 items-center justify-center px-4 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">col</div>
-                  <input type="number" id="quantity" name="quantity" defaultValue={0} min="0" max="50" onChange={e => setCol(+e.target.value)} className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-md lg:text-lg font-md"/>
+                  <input type="number" id="quantity" name="quantity" defaultValue={col} min="0" max="50" onChange={e => setCol(+e.target.value)} className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-md lg:text-lg font-md"/>
                 </div>
               </div>
               <div className="flex justify-center gap-2">
