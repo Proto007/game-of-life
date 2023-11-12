@@ -53,63 +53,44 @@ export default function App() {
     setGrid(JSON.parse(JSON.stringify(Array(row).fill(Array(col).fill(0)))));
   }
 
-  function expandGrid(){
-    let rowAdded = 0;
-    if (grid[row-1].includes(1)){
-      grid.push(Array(col).fill(0));
-      rowAdded += 1;
-    }
-    if(grid[0].includes(1)){
-      grid.unshift(Array(col).fill(0));
-      rowAdded += 1;
-    }
-    setRow(row+rowAdded);
+  function gameLoop(){
     const getCol = (arr, n) => arr.map(x => x[n]);
-    let colAdded = 0;
-    if (getCol(grid,row-1).includes(1)){
-      grid.map(function(x){return x.push(0);})
-      colAdded += 1;
-    }
-    if (getCol(grid,0).includes(1)){
-      grid.map(function(x){return x.unshift(0);})
-      colAdded += 1;
-    }
-    setCol(col+colAdded);
-  }
-
-  function trimGrid(){
-    let rowDiff = 0;
     let gridCopy = grid;
-    if (!grid[row-1].includes(1)){
+    if (gridCopy[gridCopy.length-1].includes(1)){
+      gridCopy.push(Array(gridCopy[0].length).fill(0));
+    }
+    if(gridCopy[0].includes(1)){
+      gridCopy.unshift(Array(gridCopy[0].length).fill(0));
+    }
+    if (getCol(gridCopy,gridCopy[0].length-1).includes(1)){
+      gridCopy.map(function(x){return x.push(0);})
+    }
+    if (getCol(gridCopy,0).includes(1)){
+      gridCopy.map(function(x){return x.unshift(0);})
+    }
+    // TODO: Game Rules
+    if (!gridCopy[gridCopy.length-1].includes(1)){
       gridCopy = gridCopy.slice(0,-1);
-      rowDiff += 1;
     }
-    if(!grid[0].includes(1)){
+    if(!gridCopy[0].includes(1)){
       gridCopy = gridCopy.slice(1);
-      rowDiff += 1;
     }
-    setRow(row-rowDiff);
-    const getCol = (arr, n) => arr.map(x => x[n]);
-    let colDiff = 0;
     if (!getCol(gridCopy,0).includes(1)){ 
-      gridCopy = gridCopy.map(function(x){return x.slice(0,-1);})
-      colDiff += 1;
+      gridCopy = gridCopy.map(function(x){return x.slice(1);})
     }
-    if (!getCol(gridCopy,row-1).includes(1)){
-      gridCopy = gridCopy.map(function(x){return x.slice(1)});
-      colDiff += 1;
+    if (!getCol(gridCopy,gridCopy[0].length-1).includes(1)){
+      gridCopy = gridCopy.map(function(x){return x.slice(0,-1)});
     }
-    setCol(col-colDiff);
+    setRow(gridCopy.length);
+    setCol(gridCopy[0].length);
     setGrid(gridCopy);
   }
 
   useEffect(() => {
     if (setup == true){
-      //expandGrid();
-      //trimGrid();
+      gameLoop();
     }
   },[setup]);
-
 
   return (
     <div>
