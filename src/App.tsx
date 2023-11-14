@@ -12,8 +12,9 @@ export default function App() {
   const [drag, setDrag] = useState(false);
   const [dragState, setDragState] = useState(1);
   const [grid, setGrid] = useState(JSON.parse(JSON.stringify(Array(row).fill(Array(col).fill(0)))));
+  const [generation,setGeneration] = useState(0);
   const [population, setPopulation] = useState(0);
-
+  
   useEffect(()=>{
     if (setup){
       return;
@@ -53,6 +54,58 @@ export default function App() {
     setGrid(JSON.parse(JSON.stringify(Array(row).fill(Array(col).fill(0)))));
   }
 
+  function transition(arr:any){
+    let arrCopy = arr.map(function(x) { return x.slice(); });
+    for (let i=0; i<arrCopy.length; i++){
+      for (let j=0; j<arrCopy[0].length; j++){
+        let ul = 0;
+        let u = 0;
+        let ur = 0;
+        let l = 0;
+        let r = 0;
+        let dl = 0;
+        let d = 0;
+        let dr = 0;
+        if (i - 1 >= 0 && j - 1 >= 0){
+          ul = arrCopy[i-1][j-1];
+        }
+        if(i - 1 >= 0){
+          u = arrCopy[i-1][j];
+        }
+        if(i - 1 >= 0 && j + 1 < arrCopy[0].length){
+          ur = arrCopy[i-1][j+1]; 
+        }
+        if(j - 1 >= 0){
+          l = arrCopy[i][j-1];
+        }
+        if(j + 1 < arrCopy[0].length){
+          r = arrCopy[i][j+1];
+        }
+        if(i + 1 < arrCopy.length && j - 1 >= 0){
+          dl = arrCopy[i+1][j-1];
+        }
+        if(i + 1 < arrCopy.length){
+          d = arrCopy[i+1][j];
+        }
+        if(i + 1 < arrCopy.length && j + 1 < arrCopy[0].length){
+          dr = arrCopy[i+1][j+1];
+        }
+        let neighborSum = ul + u + ur + l + r + dl + d + dr;
+        if (arrCopy[i][j] == 1 && neighborSum < 2){
+          arr[i][j] = 0;
+        }
+        else if (arrCopy[i][j] == 1 && (neighborSum == 2 || neighborSum == 3)){
+          arr[i][j] = 1;
+        }
+        else if (arrCopy[i][j] == 1 && neighborSum > 3){
+          arr[i][j] = 0;
+        }
+        else if (arrCopy[i][j] == 0 && neighborSum == 3){
+          arr[i][j] = 1;
+        }
+      }
+    }
+  }
   function gameLoop(){
     const getCol = (arr, n) => arr.map(x => x[n]);
     let gridCopy = grid;
@@ -68,7 +121,7 @@ export default function App() {
     if (getCol(gridCopy,0).includes(1)){
       gridCopy.map(function(x){return x.unshift(0);})
     }
-    // TODO: Game Rules
+    transition(gridCopy);
     if (!gridCopy[gridCopy.length-1].includes(1)){
       gridCopy = gridCopy.slice(0,-1);
     }
@@ -90,7 +143,7 @@ export default function App() {
     if (setup == true){
       gameLoop();
     }
-  },[setup]);
+  },[generation]);
 
   return (
     <div>
@@ -109,18 +162,14 @@ export default function App() {
             <div className="grow"></div>
             <div className="grow"></div>
             <div className="flex justify-center">
-              {/* TODO: MAKE THE BUTTONS FUNCTIONAL */}
-              <button className="hover:opacity-50">
-                <BiSkipPrevious size={45}/>
-              </button>
-              <button className="hover:opacity-50">
+              <button className="hover:opacity-50" onClick={() => setGeneration(generation+1)}>
                 <BiSkipNext size={45}/>
               </button>
             </div>
             <div className="grow"></div>
             <div className="flex font-electrolize align-middle w-full md:w-auto">
               <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">Generation</div>
-              <div className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md px-6 py-2 bg-white font-bold">{0}</div>
+              <div className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md px-6 py-2 bg-white font-bold">{generation}</div>
               {/* TODO: GENERATION COUNTER */}
             </div>
             <div className="flex font-electrolize align-middle w-full md:w-auto">
