@@ -14,7 +14,8 @@ export default function App() {
   const [grid, setGrid] = useState(JSON.parse(JSON.stringify(Array(row).fill(Array(col).fill(0)))));
   const [generation,setGeneration] = useState(0);
   const [population, setPopulation] = useState(0);
-  
+  const [pause, setPause] = useState(true);
+
   useEffect(()=>{
     if (setup){
       return;
@@ -44,7 +45,22 @@ export default function App() {
     }
     setPopulation(count);
   },[grid]);
+
+  useEffect(() => {
+    if(setup){
+      setPause(false);
+    }
+    if(!setup){
+      setPause(true);
+      setGeneration(0);
+    }
+  },[setup]);
   
+  useEffect(() => {
+    if(!pause){
+      setGeneration(generation+1);
+    }
+  },[pause]);
   function randomizeGrid(){
     let newGrid = grid.map(() => Array.from({length:col}, () => {return Math.round(Math.random())}));
     setGrid(newGrid);
@@ -106,6 +122,7 @@ export default function App() {
       }
     }
   }
+
   function gameLoop(){
     const getCol = (arr, n) => arr.map(x => x[n]);
     let gridCopy = grid;
@@ -140,10 +157,12 @@ export default function App() {
   }
 
   useEffect(() => {
-    if (setup == true){
+    if(setup && !pause){
       gameLoop();
+      setGeneration(generation+1);
     }
-  },[generation]);
+  }, [generation]);
+  
 
   return (
     <div>
@@ -162,7 +181,8 @@ export default function App() {
             <div className="grow"></div>
             <div className="grow"></div>
             <div className="flex justify-center">
-              <button className="hover:opacity-50" onClick={() => setGeneration(generation+1)}>
+              {/* TODO: Style Pause button, fix layout on small screens, add speed setting, add Reset button */}
+              <button className="hover:opacity-50" onClick={() => setPause(!pause)}>
                 <BiSkipNext size={45}/>
               </button>
             </div>
@@ -170,7 +190,6 @@ export default function App() {
             <div className="flex font-electrolize align-middle w-full md:w-auto">
               <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">Generation</div>
               <div className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md px-6 py-2 bg-white font-bold">{generation}</div>
-              {/* TODO: GENERATION COUNTER */}
             </div>
             <div className="flex font-electrolize align-middle w-full md:w-auto">
               <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">Population</div>
