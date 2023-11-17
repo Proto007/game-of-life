@@ -1,7 +1,7 @@
 import { useState,useEffect } from "react";
-import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi"
-import { AiOutlineClear,AiOutlineArrowRight,AiOutlineArrowLeft } from "react-icons/ai"
-import { BiSkipPrevious,BiSkipNext } from "react-icons/bi"
+import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
+import { AiOutlineClear,AiOutlineArrowRight,AiOutlineArrowLeft } from "react-icons/ai";
+import { MdLockReset,MdOutlineMotionPhotosPause,MdOutlinePlayCircle,MdOutlineSkipNext } from "react-icons/md";
 import Navbar from "./components/Navbar";
 
 export default function App() {
@@ -15,6 +15,8 @@ export default function App() {
   const [generation,setGeneration] = useState(0);
   const [population, setPopulation] = useState(0);
   const [pause, setPause] = useState(true);
+  const [finish, setFinish] = useState(false);
+  const [max, setMax] = useState(0);
 
   useEffect(()=>{
     if (setup){
@@ -44,6 +46,9 @@ export default function App() {
       }
     }
     setPopulation(count);
+    if (count > max){
+      setMax(count);
+    }
   },[grid]);
 
   useEffect(() => {
@@ -61,6 +66,7 @@ export default function App() {
       setGeneration(generation+1);
     }
   },[pause]);
+
   function randomizeGrid(){
     let newGrid = grid.map(() => Array.from({length:col}, () => {return Math.round(Math.random())}));
     setGrid(newGrid);
@@ -161,9 +167,11 @@ export default function App() {
       gameLoop();
       setGeneration(generation+1);
     }
+    else if(setup && pause){
+      gameLoop();
+    }
   }, [generation]);
   
-
   return (
     <div>
       <div className="sticky top-0 z-50">
@@ -178,13 +186,39 @@ export default function App() {
               <span className="absolute flex items-center justify-center w-full h-full text-green-300 transition-all duration-300 transform group-hover:translate-x-full ease">Back</span>
               <span className="relative invisible">Back</span>
             </button>
-            <div className="grow"></div>
-            <div className="grow"></div>
-            <div className="flex justify-center">
-              {/* TODO: Style Pause button, fix layout on small screens, add speed setting, add Reset button */}
-              <button className="hover:opacity-50" onClick={() => setPause(!pause)}>
-                <BiSkipNext size={45}/>
+            <div className="align-self flex justify-center gap-2">
+              {
+                pause ?
+                <button onClick={() => setPause(false)} className="grow relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
+                <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                  <MdOutlinePlayCircle size={40}/>
+                </span>
+                <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Play</span>
+                <span className="relative invisible">Play</span>
               </button>
+              :
+                <button onClick={() => setPause(true)} className="grow relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
+                <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                  <MdOutlineMotionPhotosPause size={40}/>
+                </span>
+                <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Pause</span>
+                <span className="relative invisible">Pause</span>
+              </button>
+            }
+              <button onClick={() => setGeneration(generation+1)} className="grow relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
+                <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                  <MdOutlineSkipNext size={40}/>
+                </span>
+                <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Next</span>
+                <span className="relative invisible">Next</span>
+              </button> 
+              <button onClick={() => {window.location.reload();}} className="grow relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
+                <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                  <MdLockReset size={40}/>
+                </span>
+                <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Reset</span>
+                <span className="relative invisible">Reset</span>
+              </button> 
             </div>
             <div className="grow"></div>
             <div className="flex font-electrolize align-middle w-full md:w-auto">
@@ -213,9 +247,16 @@ export default function App() {
                   <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
                     <GiPerspectiveDiceSixFacesRandom size={40}/>
                   </span>
-                  <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Randomize</span>
-                  <span className="relative invisible">Randomize</span>
+                  <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Random</span>
+                  <span className="relative invisible">Random</span>
                 </button>
+                <button onClick={() => {window.location.reload();}} className="grow relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
+                  <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                    <MdLockReset size={40}/>
+                  </span>
+                  <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Reset</span>
+                  <span className="relative invisible">Reset</span>
+                </button> 
                 <button onClick={() => clearGrid()} className="grow relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
                   <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
                     <AiOutlineClear size={40}/>
@@ -224,13 +265,13 @@ export default function App() {
                   <span className="relative invisible">Clear</span>
                 </button> 
                 <select id="colorSelector" defaultValue="green" onChange={e => setColor(e.target.value)} className="grow py-2 text-center text-md md:text-lg lg:text-xl font-electrolize text-black block font-bold uppercase bg-green-100 border-2 border-black hover:border-white shadow leading-tight focus:outline-none focus:shadow-outline rounded-md hover:bg-black hover:text-green-300 focus:bg-black focus:text-green-300">
-                    <option value="border-green-300">Green</option>
-                    <option value="border-red-300">Red</option>
-                    <option value="border-blue-300">Blue</option>
-                    <option value="border-orange-300">Orange</option>
-                    <option value="border-yellow-300">Yellow</option>
-                    <option value="border-indigo-300">Indigo</option>
-                    <option value="border-violet-300">Violet</option>
+                    <option value="border-green-100">Green</option>
+                    <option value="border-red-100">Red</option>
+                    <option value="border-blue-100">Blue</option>
+                    <option value="border-orange-100">Orange</option>
+                    <option value="border-yellow-100">Yellow</option>
+                    <option value="border-indigo-100">Indigo</option>
+                    <option value="border-violet-100">Violet</option>
                 </select>
               </div>
               <div className="grow"></div>
@@ -305,3 +346,4 @@ export default function App() {
     </div>
   )
 }
+
