@@ -15,7 +15,7 @@ export default function App() {
   const [generation,setGeneration] = useState(0);
   const [population, setPopulation] = useState(0);
   const [pause, setPause] = useState(true);
-  const [finish, setFinish] = useState(false);
+  // const [finish, setFinish] = useState(false);
   // TODO: Game over screen, slow down the game or add a slider, fix game layout for small screen
   const [max, setMax] = useState(0);
 
@@ -78,7 +78,7 @@ export default function App() {
   }
 
   function transition(arr:any){
-    let arrCopy = arr.map(function(x) { return x.slice(); });
+    let arrCopy = arr.map(function(x:any) { return x.slice(); });
     for (let i=0; i<arrCopy.length; i++){
       for (let j=0; j<arrCopy[0].length; j++){
         let ul = 0;
@@ -131,7 +131,7 @@ export default function App() {
   }
 
   function gameLoop(){
-    const getCol = (arr, n) => arr.map(x => x[n]);
+    const getCol = (arr:any, n:any) => arr.map((x:any) => x[n]);
     let gridCopy = grid;
     if (gridCopy[gridCopy.length-1].includes(1)){
       gridCopy.push(Array(gridCopy[0].length).fill(0));
@@ -140,10 +140,10 @@ export default function App() {
       gridCopy.unshift(Array(gridCopy[0].length).fill(0));
     }
     if (getCol(gridCopy,gridCopy[0].length-1).includes(1)){
-      gridCopy.map(function(x){return x.push(0);})
+      gridCopy.map(function(x:any){return x.push(0);})
     }
     if (getCol(gridCopy,0).includes(1)){
-      gridCopy.map(function(x){return x.unshift(0);})
+      gridCopy.map(function(x:any){return x.unshift(0);})
     }
     transition(gridCopy);
     if (!gridCopy[gridCopy.length-1].includes(1)){
@@ -153,10 +153,10 @@ export default function App() {
       gridCopy = gridCopy.slice(1);
     }
     if (!getCol(gridCopy,0).includes(1)){ 
-      gridCopy = gridCopy.map(function(x){return x.slice(1);})
+      gridCopy = gridCopy.map(function(x:any){return x.slice(1);})
     }
     if (!getCol(gridCopy,gridCopy[0].length-1).includes(1)){
-      gridCopy = gridCopy.map(function(x){return x.slice(0,-1)});
+      gridCopy = gridCopy.map(function(x:any){return x.slice(0,-1)});
     }
     setRow(gridCopy.length);
     setCol(gridCopy[0].length);
