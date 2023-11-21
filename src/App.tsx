@@ -15,8 +15,9 @@ export default function App() {
   const [generation,setGeneration] = useState(0);
   const [population, setPopulation] = useState(0);
   const [pause, setPause] = useState(true);
+  const [speed, setSpeed] = useState(0);
   // const [finish, setFinish] = useState(false);
-  // TODO: Game over screen, slow down the game or add a slider, fix game layout for small screen
+  // TODO: Game over screen
   const [max, setMax] = useState(0);
 
   useEffect(()=>{
@@ -64,7 +65,7 @@ export default function App() {
 
   useEffect(() => {
     if(!pause){
-      setGeneration(generation+1);
+      setSpeed(speed+1);
     }
   },[pause]);
 
@@ -164,14 +165,19 @@ export default function App() {
   }
 
   useEffect(() => {
-    if(setup && !pause){
+    if(setup && !pause && speed%500==0){
       gameLoop();
       setGeneration(generation+1);
+      setSpeed(speed+1);
     }
     else if(setup && pause){
       gameLoop();
+      setGeneration(generation+1);
     }
-  }, [generation]);
+    else{
+      setSpeed(speed+1);
+    }
+  }, [speed]);
 
   return (
     <div>
@@ -179,7 +185,7 @@ export default function App() {
         <Navbar/>
           { 
             setup ?
-              <div className="bg-green-300 p-2 flex-col md:flex-row flex justify-center gap-2 border-b border-black">
+              <div className="bg-green-300 p-2 flex flex-col lg:flex-row justify-center gap-2 border-b border-black">
                 <button onClick={() => setSetup(false)} className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-green-300 transition duration-300 ease-out border-2 border-white rounded-md bg-black shadow-md group">
                   <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
                     <AiOutlineArrowLeft size={30}/>
@@ -206,7 +212,7 @@ export default function App() {
                         <span className="relative invisible">Pause</span>
                       </button>
                   }
-                  <button onClick={() => setGeneration(generation+1)} className="grow relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
+                  <button onClick={() => setSpeed(speed+1)} className="grow relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
                     <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
                       <MdOutlineSkipNext size={40}/>
                     </span>
@@ -221,18 +227,21 @@ export default function App() {
                     <span className="relative invisible">Reset</span>
                   </button> 
                 </div>
+                
                 <div className="grow"></div>
-                <div className="flex font-electrolize align-middle w-full md:w-auto">
-                  <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">Generation</div>
-                    <div className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md px-6 py-2 bg-white font-bold">{generation}</div>
-                  </div>
+                <div className="flex flex-col md:flex-row gap-2 justify-center">
                   <div className="flex font-electrolize align-middle w-full md:w-auto">
-                    <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">Population</div>
-                    <div className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md px-6 py-2 bg-white font-bold">{population}</div>
-                  </div>
-                  <div className="flex font-electrolize align-middle w-full md:w-auto">
-                    <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">Highest</div>
-                    <div className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md px-6 py-2 bg-white font-bold">{max}</div>
+                    <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">Generation</div>
+                      <div className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md px-6 py-2 bg-white font-bold">{generation}</div>
+                    </div>
+                    <div className="flex font-electrolize align-middle w-full md:w-auto">
+                      <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">Population</div>
+                      <div className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md px-6 py-2 bg-white font-bold">{population}</div>
+                    </div>
+                    <div className="flex font-electrolize align-middle w-full md:w-auto">
+                      <div className="grow md:grow-0 items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black border-2 border-black rounded-l-md bg-green-100 shadow-md">Highest</div>
+                      <div className="rounded-r-md border-black border-y-2 border-r-2 shadow-md text-center text-lg font-md px-6 py-2 bg-white font-bold">{max}</div>
+                    </div>
                   </div>
                 </div>
               :
