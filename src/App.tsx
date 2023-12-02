@@ -16,8 +16,7 @@ export default function App() {
   const [population, setPopulation] = useState(0);
   const [pause, setPause] = useState(true);
   const [speed, setSpeed] = useState(0);
-  // const [finish, setFinish] = useState(false);
-  // TODO: Game over screen
+  const [finish, setFinish] = useState(false);
   const [max, setMax] = useState(0);
 
   useEffect(()=>{
@@ -130,8 +129,22 @@ export default function App() {
       }
     }
   }
+  
+  function checkEmpty(){
+    let total = grid.flat().reduce((a:any,b:any) => a+b);
+    return total == 0;
+  }
 
   function gameLoop(){
+    if (row * col == 500){
+      setPause(true);
+      alert("The grid is becoming pretty big. Be careful about your memory because if you continue, you will run out of memory and your computer will crash!!!");
+      return;
+    }
+    if (checkEmpty() == true){
+      setFinish(true);
+      return;
+    }
     const getCol = (arr:any, n:any) => arr.map((x:any) => x[n]);
     let gridCopy = grid;
     if (gridCopy[gridCopy.length-1].includes(1)){
@@ -179,10 +192,17 @@ export default function App() {
     }
   }, [speed]);
 
+  useEffect(() => {
+    if (finish == true){
+      setPause(true);
+    }
+  },[finish]);
+  
   return (
     <div>
       <div className="sticky top-0 z-50">
         <Navbar/>
+      </div>
           { 
             setup ?
               <div className="bg-green-300 p-2 flex flex-col lg:flex-row justify-center gap-2 border-b border-black">
@@ -190,8 +210,8 @@ export default function App() {
                   <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
                     <AiOutlineArrowLeft size={30}/>
                   </span>
-                <span className="absolute flex items-center justify-center w-full h-full text-green-300 transition-all duration-300 transform group-hover:translate-x-full ease">Back</span>
-                <span className="relative invisible">Back</span>
+                  <span className="absolute flex items-center justify-center w-full h-full text-green-300 transition-all duration-300 transform group-hover:translate-x-full ease">Back</span>
+                  <span className="relative invisible">Back</span>
                 </button>
                 <div className="align-self flex justify-center gap-2">
                   { 
@@ -211,7 +231,7 @@ export default function App() {
                         <span className="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform group-hover:translate-x-full ease">Pause</span>
                         <span className="relative invisible">Pause</span>
                       </button>
-                  }
+                    }
                   <button onClick={() => setSpeed(speed+1)} className="grow relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-electrolize font-bold text-md md:text-lg lg:text-xl uppercase text-black transition duration-300 ease-out border-2 border-black rounded-md bg-green-100 shadow-md group">
                     <span className="absolute inset-0 flex items-center justify-center w-full h-full text-green-300 duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
                       <MdOutlineSkipNext size={40}/>
@@ -309,21 +329,26 @@ export default function App() {
                   </button>
                 </div>
               }
-          </div>
-          <div 
-            className="flex-col p-2"
-            onMouseUp={() => {if(!setup){setDrag(false);}}}
-            onMouseLeave={() => {if(!setup){setDrag(false);}}}
-          >
-            {
-              grid.map((r:any,i:any) => (
-                <div key={i} className="flex justify-center">
-                  {
-                    r.map((_:any,j:any) => 
-                      <div 
-                        key={j} 
-                        onMouseEnter={
-                          () => {
+          {
+            finish ?
+              <div className="text-center font-electrolize font-extrabold text-5xl py-32 text-red-600 animate-bounce">
+                GAMEOVER
+              </div>
+            :
+            <div 
+              className="flex-col p-2"
+              onMouseUp={() => {if(!setup){setDrag(false);}}}
+              onMouseLeave={() => {if(!setup){setDrag(false);}}}
+            >
+              {
+                grid.map((r:any,i:any) => (
+                  <div key={i} className="flex justify-center">
+                    {
+                      r.map((_:any,j:any) => 
+                        <div 
+                          key={j} 
+                          onMouseEnter={
+                            () => {
                             if(!setup && drag){
                               let newGrid=[...grid];
                               newGrid[i][j] = dragState;
@@ -349,8 +374,9 @@ export default function App() {
                   }
                 </div>
               ))
-          }
-      </div>
+            }
+          </div>
+        }
     </div>
   )
 }
